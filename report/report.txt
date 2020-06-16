@@ -1,0 +1,170 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Stylish Article
+% LaTeX Template
+% Version 2.1 (1/10/15)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Mathias Legrand (legrand.mathias@gmail.com) 
+% With extensive modifications by:
+% Vel (vel@latextemplates.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[fleqn,10pt]{SelfArx} % Document font size and equations flushed left
+
+\usepackage[italian]{babel} % Specify a different language here - english by default
+
+\usepackage{lipsum} % Required to insert dummy text. To be removed otherwise
+
+%----------------------------------------------------------------------------------------
+%	COLUMNS
+%----------------------------------------------------------------------------------------
+
+\setlength{\columnsep}{0.55cm} % Distance between the two columns of text
+\setlength{\fboxrule}{0.75pt} % Width of the border around the abstract
+
+%----------------------------------------------------------------------------------------
+%	COLORS
+%----------------------------------------------------------------------------------------
+
+\definecolor{color1}{RGB}{0,0,90} % Color of the article title and sections
+\definecolor{color2}{RGB}{0,20,20} % Color of the boxes behind the abstract and headings
+
+%----------------------------------------------------------------------------------------
+%	HYPERLINKS
+%----------------------------------------------------------------------------------------
+
+\usepackage{hyperref} % Required for hyperlinks
+\hypersetup{hidelinks,colorlinks,breaklinks=true,urlcolor=color2,citecolor=color1,linkcolor=color1,bookmarksopen=false,pdftitle={Title},pdfauthor={Author}}
+
+%----------------------------------------------------------------------------------------
+%	ARTICLE INFORMATION
+%----------------------------------------------------------------------------------------
+
+\JournalInfo{\textit{Social Media Analytics} - Progetto finale} % Journal information
+\Archive{Università degli Studi di Milano Bicocca, A.A. 2019-20} % Additional notes (e.g. copyright, DOI, review/research article)
+
+\PaperTitle{\textit{QAnon} - Analisi del linguaggio e delle interazioni virtuali su Twitter} % Article title
+
+\Authors{Riccardo Cervero\textsuperscript{1}} % Authors
+\affiliation{\textsuperscript{1}\textit{Dipartimento di Informatica, Sistemistica e Comunicazione, matr. \textbf{794126}}} % Author affiliation
+
+
+%----------------------------------------------------------------------------------------
+%	ABSTRACT
+%----------------------------------------------------------------------------------------
+
+\Abstract{}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\flushbottom % Makes all text pages the same height
+
+\maketitle % Print the title and abstract box
+
+\tableofcontents % Print the contents section
+
+\thispagestyle{empty} % Removes page numbering from the first page
+
+%----------------------------------------------------------------------------------------
+%	ARTICLE CONTENTS
+%----------------------------------------------------------------------------------------
+\section*{Introduzione} % The \section*{} command stops section numbering
+
+\addcontentsline{toc}{section}{Introduzione} % Adds this section to the table of contents
+I recenti sviluppi nell'ambito delle \textit{Information Technology} hanno reso possibile la veicolazione di un'enorme mole di informazioni in un arco di tempo ridottissimo e con sempre maggiore facilità. Questa tendenza alla democratizzazione nella produzione di contenuti sul Web ha evidenti ventaggi, offrendo a chiunque possa accedere alle piattaforme  l'opportunità di raggiungere, col proprio messaggio, moltissimi altri utenti, quasi sempre gratuitamente. Tuttavia, è altrettanto evidente come un utilizzo irresponsabile di questo sistema aperto possa provocare, in assenza di stretti controlli, comportamenti nocivi per la stessa comunità virtuale. Una delle conseguenze è la diffusione di messaggi di odio e notizie false, fenomeno emergente negli ultimi anni, sempre più spesso dibattuto, che ha avuto - e continua ad avere - la capacità di polarizzare l'opinione pubblica, radicalizzare le ideologie dell'elettorato e, in senso più ampio, influenzare l'intera società. La creazione di narrazioni false e inverosimili è spesso un potente - e pericoloso - strumento di marketing politico utile ad acquisire nuovi seguaci e colpire i propri avversari. È questo il caso di \textit{QAnon}: una teoria del complotto legata agli ambienti di estrema destra secondo cui esisterebbe una trama segreta ordita da uno "stato profondo" contro il presidente degli Stati Uniti Donald Trump e i suoi sostenitori. La genesi del movimento è da attribuirsi al primo post di un utente anonimo\footnote{L'account era nominato "Q". Da ciò la dicitura "\textit{QAnon}", derivata dall'unione fra il nome e "Anon", abbreviazione di \textit{anonymous} - "anonimo" in inglese.} sulla piattaforma \textit{4chan}, il quale sosteneva falsamente di avere accesso a informazioni che provavano il coinvolgimento degli oppositori dell'amministrazione Trump - tra cui artisti, giornalisti liberali, politici democratici e funzionari di alto rango\footnote{I capi del presunto stato profondo sarebbero Barack Obama, Hillary Clinton e George Soros.} - in un traffico internazionale di minori. Il post, inoltre, accusava i membri di questa setta segreta di aver fallito nel tentativo di rovesciare la presidenza con un colpo di stato.\\
+I concetti promossi dal movimento hanno avuto grande diffusione in tutto il mondo e sono stati ampiamente discussi e criticati su \textit{Twitter}. Nell'agosto 2019, l'\textit{FBI} ha dichiarato che \textit{QAnon} è potenziale fonte di terrorismo interno. Nonostante ciò, il movimento è stato accolto positivamente dai vertici del governo statunitense e alcuni promotori sono stati invitati alla Casa Bianca.\\
+Nelle sezioni seguenti verranno riassunte le fasi di raccolta dei contenuti riferiti a \textit{QAnon}, descrizione delle interazioni fra gli utenti che ne discutono e delle comunità da loro costituite, analisi del linguaggio e dei \text{topic} connessi, estrazione del sentimento con cui le opinioni sul tema vengono espresse. 
+%------------------------------------------------
+\section{Raccolta del testo}
+I contenuti testuali su cui si basa l'analisi provengono da una raccolta di 49732 \textit{tweets} non duplicati in lingua inglese estratti durante la giornata del 5 giugno 2020, accedendo all'\textit{API} ufficiale di \textit{Twitter} grazie alla libreria di \verb|Python| \verb|tweepy|\footnote{Documentazione ufficiale della libreria: \url{https://www.tweepy.org}}. Oltre al termine "\textit{QAnon}", la ricerca è stata filtrata in base a una lista di espressioni e \textit{hashtag} tipici del fenomeno, tra cui "\textit{QArmy}", "\textit{QKnows}", "\textit{QSees}", "\textit{\#QAnonEurope}".
+L'estrazione dei dati è avvenuta casualmente in corrispondenza delle ore successive al funerale di George Floyd, la cui morte, avvenuta poco dopo un arresto nella città di Minneapolis, ha scatenato moti di protesta in tutto il paese. Questo evento ha indirettamente svolto il ruolo di catalizzatore della discussione \textit{online}, permettendo di raccogliere moltissimi testi in poche ore.
+%------------------------------------------------
+\section{Pre-processing e analisi preliminare}
+I \textit{tweets} analizzati sono stati pubblicati da 26770 utenti diversi, e contengono menzioni, \textit{retweet}, risposte e citazioni ad altri 2152, per un totale di quasi 29000 account.\\
+I metadati relativi ad ogni \textit{tweet} sono suddivisi in 37 campi principali in formato \verb|JSON|, a loro volta composti da vari sottocampi. Poichè molti dei dati contenuti erano inutili per il tipo di studio o non erano stati registrati in maniera uniforme\footnote{Le informazioni registrate in maniera non uniforme sono principalmente relative alla geolocalizzazione dell'utente: \verb|coordinates,\verb|withheld\_in\_countries,\verb|place\|.}, molti dei campi sono stati rimossi. Dopo la loro rimozione, si è proceduto ad estrarre i sottocampi più interessanti, componendo un database tabulare. Le informazioni rilevanti inserite nel database finale sono relative a:
+\begin{itemize}
+    \item utente: nome dell'account - \textit{screen name} -, numero di \textit{follower} e numero di \textit{following}
+    \item post: codice identificativo del \textit{tweet}, testo originale e lista degli \textit{hashtag} contenuti
+    \item interazioni con altri utenti - di cui viene memorizzato lo \textit{screen name} -, classificate in
+    \begin{itemize}
+        \item menzioni (\textit{mentions})
+        \item \textit{retweet} 
+        \item citazioni (\textit{quotes})
+        \item risposte (\textit{replies})
+    \end{itemize}
+\end{itemize}
+Nel successivo paragrafo verranno presentate delle analisi preliminari relative agli \textit{hashtags} usati e ai tre tipi di interazione virtuale.
+\subsubsection{Hashtags}
+Escludendo quelli già menzionati in precedenza, i sostenitori della teoria codificano solitamente i propri contenuti con \textit{hashtags} generati da espressioni ricorrenti, come ad esempio \textit{Where we go one, we go all} - traduzione del motto "Uno per tutti, tutti per uno" -, \textit{Wake up America} - "Svegliati America" -, \textit{Facts matter} - "I fatti contano", e infine \textit{We are the new show} - "Siamo il nuovo \textit{show}". Spesso, le formule vengono mutuate dalla sfera religiosa, come nel caso di \textit{the great awakening} - "il grande risveglio" - e \textit{God wins} - "Dio vince" -, o citano termini particolari, come \textit{the storm} - "la tempesta", intesa come metafora della cattura di tutti i membri dello stato profondo. Osservando la Figura \ref{fig:hashtags} è possibile notare alcuni vocaboli di terminologia bellica: \textit{Q-Alert, Q-Army} e addirittura \textit{war}. Altre volte, il testo viene accompagnato con \textit{hashtags} direttamente collegati al presidente degli Stati Uniti o agli slogan della sua amministrazione: \textit{M.A.G.A.} è acronimo della celebre frase \textit{Make America great again}, a rimarcare l'appoggio del movimento alla figura politica di Donald Trump. L'\textit{endorsement} si manifesta chiaramente anche nella frequenza con cui gli utenti discutono della questione \textit{Obamagate}, parola che riassume varie infondante accuse di corruzione dell'attuale \textit{POTUS} nei confronti del proprio predecessore. Infine, il fenomeno \textit{QAnon} si rivela trasversale, riferendosi molto frequentemente a temi non direttamente connessi: il coronavirus - che secondo una frangia del movimento sarebbe stato diffuso volontariamente dai detrattori di Trump per danneggiarlo -, le proteste legate alla morte di Floyd - la quale, secondo alcuni utenti, sarebbe stata pianificata dai membri dello stato profondo per lo stesso motivo - e la decisione di dichiarare il gruppo AntiFa come organizzazione terroristica negli USA - appoggiata dai promotori della teoria, poichè legati agli ambienti di estrema destra.\\ Al tempo stesso, come visibile dalla Figura \ref{fig:hashtags}, una grande porzione di account si oppone ai commenti razzisti del movimento (\textit{\#blacklivesmatter}) e si rivolge in maniera fortemente critica nei confronti di \textit{QAnon}, definendola \textit{fake news}.\\
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\linewidth]{TopHashtags.png}
+    \caption{Grafico \textit{bar chart} che rappresenta la frequenza assoluta dei 20 \textit{hashtags} più frequentemente abbinati al testo.}
+    \label{fig:hashtags}
+\end{figure}
+\subsubsection{Interazioni virtuali}
+Il legame virtuale più osservato nell'ambito dei dati raccolti è il \textit{retweet}, che si verifica in più del 76\% dei casi in cui avviene un'interazione. Il \textit{retweet} si basa su una menzione dell'utente che ha postato il testo originario. Seguono la citazione - corrispondente a circa il 15.4\% delle interazioni, e la risposta (8.6\%).\\
+La Figura 2 rappresenta graficamente la frequenza assoluta degli utenti più frequentemente menzionati e/o "\textit{retweettati}". Fra di essi, compaiono l'account personale (\textit{@realDonaldTrump}) e ufficiale (\textit{@POTUS}) di Donald Trump, di George Soros, della pagina di news sulla politica "The Hill" e di altre personalità popolari, come virologi, commentatori e \textit{youtubers}. 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\linewidth]{TopMentions.png}
+    \label{fig:mentions}
+\end{figure}
+\subsection{Text Pre-processing}
+Innanzitutto, si è scelto di sfruttare la versione estesa dei \textit{tweet}, ovvero sostituire la versione composta da un numero maggiore di 140 caratteri a quella  originale ridotta, quando presente. Poi, la pulizia del testo ha implicato i seguenti step:
+%
+\begin{enumerate}
+    \item rimozione delle parti inutili del testo: \textit{URLs}, menzioni, punteggiatura, numeri, caratteri speciali
+    \item conversione degli \textit{hashtags} in parole, poiché questi sono molto spesso usati in alternativa ai termini stessi all'interno delle frasi: "\textit{They are \#enemies}"
+    \item conversione di \textit{emojis} e \textit{emoticons} in parole, al fine di ricavare maggiori indicazioni testuali sui sentimenti e la polarità durante la procedura di "\textit{Sentiment Analysis}", e ottenere informazioni sui simboli inclusi. Questa procedura è stata eseguita sfruttando il pacchetto \verb|emot|\footnote{\url{https://pypi.org/project/emot/}} in \verb|Pyhon|: "Hilarious :-)" $\longrightarrow$ "Hilarious \textbf{happy face smiley}"
+    \item normalizzazione, che avviene con la rimozione delle contrazioni tipiche della lingua inglese - ad esempio, da \textit{"couldn't"} a \textit{"could not"} -, la trasformazione delle espressioni colloquiali - come \textit{"ty"} in \textit{"thank you"} - e la riduzione del testo in minuscolo.
+\end{enumerate}
+In aggiunta, per una migliore estrazione dei \textit{topic} e una stima efficace del \textit{language model} il testo è stato sottoposto a ulteriori processi di lemmatizzazione e rimozione delle \textit{stopwords}.
+Per quanto riguarda la "\textit{Sentiment Analysis}", queste due operazioni non sono state effettuate, al fine di evitare una perdita di informazione che potesse penalizzarne il risultato e l'efficienza.
+\subsection{Individuazione dei bot}
+%------------------------------------------------
+\section{Grafo delle interazioni}
+\subsection{Descrizione del grafo}
+%------------------------------------------------
+\section{Community Detection}
+\subsection{Metodologie di estrazione}
+\subsubsection{Algoritmo di Louvain}
+\subsubsection{Metodo di Newman}
+\subsubsection{Propagazione asincrona dell'etichetta}
+\subsubsection{Metodo Information Map}
+\subsection{Analisi delle comunità}
+%------------------------------------------------
+\section{Temi e linguaggio}
+%------------------------------------------------
+\section{Sentiment Analysis}
+%------------------------------------------------
+\section{Risultati}
+%------------------------------------------------
+\section{Conclusioni}
+%------------------------------------------------
+\newpage
+\section*{Codice}
+L'intero codice, implementato con linguaggi \verb|Python| e \verb|R|, è disponibile al link: \url{https://github.com/RCrvro/Social-Media-Analytics-Project}.
+
+\section*{Bibliografia}
+ 
+\bibitem{B} 
+\href{http://statweb.stanford.edu/~imj/WEBLIST/2004/LarsAnnStat04.pdf}{Efron B., Hastie T., Johnstone I., Tibshirani R., \textit{Least Angle Regression}, Stanford University, Stanford, 2003.}
+
+\bibitem{D} 
+Hastie, T; Tibshirani, R.; Friedman J.; \textit{"The Elements of Statistical Learning: Data Mining, Inference, and Prediction"}, Stanford University, Stanford, 2009. 
+
+\end{document}
