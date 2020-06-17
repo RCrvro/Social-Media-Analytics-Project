@@ -89,12 +89,12 @@ I concetti promossi dal movimento hanno avuto grande diffusione in tutto il mond
 Nelle sezioni seguenti verranno riassunte le fasi di raccolta dei contenuti riferiti a \textit{QAnon}, descrizione delle interazioni fra gli utenti che ne discutono e delle comunità da loro costituite, analisi del linguaggio e dei \text{topic} connessi, estrazione del sentimento con cui le opinioni sul tema vengono espresse. 
 %------------------------------------------------
 \section{Raccolta del testo}
-I contenuti testuali su cui si basa l'analisi provengono da una raccolta di 49732 \textit{tweets} non duplicati in lingua inglese estratti durante la giornata del 5 giugno 2020, accedendo all'\textit{API} ufficiale di \textit{Twitter} grazie alla libreria di \verb|Python| \verb|tweepy|\footnote{Documentazione ufficiale della libreria: \url{https://www.tweepy.org}}. Oltre al termine "\textit{QAnon}", la ricerca è stata filtrata in base a una lista di espressioni e \textit{hashtag} tipici del fenomeno, tra cui "\textit{QArmy}", "\textit{QKnows}", "\textit{QSees}", "\textit{\#QAnonEurope}".
+I contenuti testuali su cui si basa l'analisi provengono da una raccolta di 49732 \textit{tweets} non duplicati in lingua inglese estratti durante la giornata del 5 giugno 2020, accedendo all'\textit{API} ufficiale di \textit{Twitter} grazie alla libreria di \texttt{Python} \texttt{tweepy}\footnote{Documentazione ufficiale della libreria: \url{https://www.tweepy.org}}. Oltre al termine "\textit{QAnon}", la ricerca è stata filtrata in base a una lista di espressioni e \textit{hashtag} tipici del fenomeno, tra cui "\textit{QArmy}", "\textit{QKnows}", "\textit{QSees}", "\textit{\#QAnonEurope}".
 L'estrazione dei dati è avvenuta casualmente in corrispondenza delle ore successive al funerale di George Floyd, la cui morte, avvenuta poco dopo un arresto nella città di Minneapolis, ha scatenato moti di protesta in tutto il paese. Questo evento ha indirettamente svolto il ruolo di catalizzatore della discussione \textit{online}, permettendo di raccogliere moltissimi testi in poche ore.
 %------------------------------------------------
 \section{Pre-processing e analisi preliminare}
 I \textit{tweets} analizzati sono stati pubblicati da 26770 utenti diversi, e contengono menzioni, \textit{retweet}, risposte e citazioni ad altri 2152, per un totale di quasi 29000 account.\\
-I metadati relativi ad ogni \textit{tweet} sono suddivisi in 37 campi principali in formato \verb|JSON|, a loro volta composti da vari sottocampi. Poichè molti dei dati contenuti erano inutili per il tipo di studio o non erano stati registrati in maniera uniforme\footnote{Le informazioni registrate in maniera non uniforme sono principalmente relative alla geolocalizzazione dell'utente: \verb|coordinates,\verb|withheld\_in\_countries,\verb|place\|.}, molti dei campi sono stati rimossi. Dopo la loro rimozione, si è proceduto ad estrarre i sottocampi più interessanti, componendo un database tabulare. Le informazioni rilevanti inserite nel database finale sono relative a:
+I metadati relativi ad ogni \textit{tweet} sono suddivisi in 37 campi principali in formato \texttt{JSON}, a loro volta composti da vari sottocampi. Poichè molti dei dati contenuti erano inutili per il tipo di studio o non erano stati registrati in maniera uniforme\footnote{Le informazioni registrate in maniera non uniforme sono principalmente relative alla geolocalizzazione dell'utente: \texttt{coordinates},\texttt{withheld\_in\_countries},\texttt{place}.}, molti dei campi sono stati rimossi. Dopo la loro rimozione, si è proceduto ad estrarre i sottocampi più interessanti, componendo un database tabulare. Le informazioni rilevanti inserite nel database finale sono relative a:
 \begin{itemize}
     \item utente: nome dell'account - \textit{screen name} -, numero di \textit{follower} e numero di \textit{following}
     \item post: codice identificativo del \textit{tweet}, testo originale e lista degli \textit{hashtag} contenuti
@@ -117,7 +117,7 @@ Escludendo quelli già menzionati in precedenza, i sostenitori della teoria codi
 \end{figure}
 \subsubsection{Interazioni virtuali}
 Il legame virtuale più osservato nell'ambito dei dati raccolti è il \textit{retweet}, che si verifica in più del 76\% dei casi in cui avviene un'interazione. Il \textit{retweet} si basa su una menzione dell'utente che ha postato il testo originario. Seguono la citazione - corrispondente a circa il 15.4\% delle interazioni, e la risposta (8.6\%).\\
-La Figura 2 rappresenta graficamente la frequenza assoluta degli utenti più frequentemente menzionati e/o "\textit{retweettati}". Fra di essi, compaiono l'account personale (\textit{@realDonaldTrump}) e ufficiale (\textit{@POTUS}) di Donald Trump, di George Soros, della pagina di news sulla politica "The Hill" e di altre personalità popolari, come virologi, commentatori e \textit{youtubers}. 
+La Figura rappresenta graficamente la frequenza assoluta degli utenti più frequentemente menzionati e/o "\textit{retweettati}". Fra di essi, compaiono l'account personale (\textit{@realDonaldTrump}) e ufficiale (\textit{@POTUS}) di Donald Trump, di George Soros, della pagina di news sulla politica "The Hill" e di altre personalità popolari, come virologi, commentatori e \textit{youtubers}. 
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.9\linewidth]{TopMentions.png}
@@ -129,17 +129,77 @@ Innanzitutto, si è scelto di sfruttare la versione estesa dei \textit{tweet}, o
 \begin{enumerate}
     \item rimozione delle parti inutili del testo: \textit{URLs}, menzioni, punteggiatura, numeri, caratteri speciali
     \item conversione degli \textit{hashtags} in parole, poiché questi sono molto spesso usati in alternativa ai termini stessi all'interno delle frasi: "\textit{They are \#enemies}"
-    \item conversione di \textit{emojis} e \textit{emoticons} in parole, al fine di ricavare maggiori indicazioni testuali sui sentimenti e la polarità durante la procedura di "\textit{Sentiment Analysis}", e ottenere informazioni sui simboli inclusi. Questa procedura è stata eseguita sfruttando il pacchetto \verb|emot|\footnote{\url{https://pypi.org/project/emot/}} in \verb|Pyhon|: "Hilarious :-)" $\longrightarrow$ "Hilarious \textbf{happy face smiley}"
+    \item conversione di \textit{emojis} e \textit{emoticons} in parole, al fine di ricavare maggiori indicazioni testuali sui sentimenti e la polarità durante la procedura di "\textit{Sentiment Analysis}", e ottenere informazioni sui simboli inclusi. Questa procedura è stata eseguita sfruttando il pacchetto \texttt{emot}\footnote{Documentazione della libreria: \url{https://pypi.org/project/emot/}} in \texttt{Pyhon}: "Hilarious :-)" $\longrightarrow$ "Hilarious \textbf{happy face smiley}"
     \item normalizzazione, che avviene con la rimozione delle contrazioni tipiche della lingua inglese - ad esempio, da \textit{"couldn't"} a \textit{"could not"} -, la trasformazione delle espressioni colloquiali - come \textit{"ty"} in \textit{"thank you"} - e la riduzione del testo in minuscolo.
 \end{enumerate}
-In aggiunta, per una migliore estrazione dei \textit{topic} e una stima efficace del \textit{language model} il testo è stato sottoposto a ulteriori processi di lemmatizzazione e rimozione delle \textit{stopwords}.
+In aggiunta, per una migliore estrazione dei \textit{topic} e una stima efficace del \textit{language model} il testo è stato sottoposto a ulteriori processi: rimozione delle \textit{stopwords}\footnote{I termini rimossi sono quelli presenti all'interno del dizionario \textit{stopwords} nel corpus del pacchetto \href{https://www.nltk.org/_modules/nltk/corpus.html}{\texttt{nltk}} in \texttt{Python}} - e lemmatizzazione. Quest'ultima è stata combinata con un procedimento di \textit{POS Tagging}, poiché il risultato di estrazione dei lemmi migliora sensibilmente se vi si antepone il riconoscimento delle componenti grammaticali, diminuendo le ambiguita del testo. La \textit{pipeline} appena descritta è stata implementata mediante  la libreria per l'elaborazione del linguaggio naturale \texttt{spaCy}\footnote{Documentazione ufficiale della libreria: \url{https://spacy.io/usage/models}}.\\
 Per quanto riguarda la "\textit{Sentiment Analysis}", queste due operazioni non sono state effettuate, al fine di evitare una perdita di informazione che potesse penalizzarne il risultato e l'efficienza.
 \subsection{Individuazione dei bot}
+L'impiego di programmi automatici per la distribuzione di messaggi malevoli di propaganda è prassi diffusa fra i movimenti cospirazionisti sul \textit{Web}, perché ciò permette di raggiungere in maniera più semplice e rapida un maggior bacino d'utenza, specialmente all'interno delle piattaforme dei \textit{social networks}. Nonostante il continuo sviluppo di questi sistemi abbia reso complicata la loro individuazione, sono state rilasciate alcune librerie che, sfruttando un modello generato da algoritmi di apprendimento, analizzano le \textit{feature} dell'account - testuali e non -  e restituiscono la probabilità di essere un bot. In questo caso, si è optato per pacchetto \texttt{tweetbotornot}\footnote{Codice e documentazione della libreria: \url{https://github.com/mkearney/tweetbotornot}. È stato usato il \textit{default model}, per il quale viene indicata un'accuratezza del 93.53\% nel riconoscimento di bot e del 95.32\% nell'individuazione di utenti reali.} nel linguaggio \texttt{R}. Impostando 90\% come soglia di probabilità, il sistema ha estratto 387 account automatizzati, per un totale di 840 \textit{tweets}. Si è scelto di non rimuoverli dal database, in modo da valutare l'incidenza di questi utenti artificiali sul dibattito e la loro presenza in determinate comunità. A tal proposito, è interessante notare come molti di essi abbiano un numero di \textit{follower} elevato\footnote{La media del numero di follower per bot è pari a ~4199, additittura con un massimo di 104717.}, facendo supporre un elevato grado di potenziale influenza sulla reale utenza. Casi ancor più particolari si verificano quando alla numerosità dei seguaci si abbina una probabilità di essere bot superiore al 99\%: è il caso, ad esempio, dell'account nominato "Donna Holmes", che mostra un valore di probabilità del 99.98\% - il maggiore osservato - e conta più di 9000 \textit{followers}. 
 %------------------------------------------------
 \section{Grafo delle interazioni}
-\subsection{Descrizione del grafo}
+Dopo aver analizzato in forma preliminare il database dei metadati dei \textit{tweets} registrati, si è proceduto ad analizzare il complesso di interazioni virtuali fra gli utenti impegnati nella discussione \textit{online} sul fenomeno \textit{QAnon}. Grazie alla libreria \texttt{NetworkX}\footnote{Documentazione ufficiale della libreria: \url{https://networkx.github.io/documentation/stable/}}, è stato possibile definire una struttura a grafo, all'interno della quale i nodi e gli archi rappresentano rispettivamente gli utenti e l'insieme di legami intercorsi sotto forma di \textit{retweet}, citazioni, menzioni e risposte. Il complesso generato dalle 49732 righe si prensenta come un grafo non orientato composto da 30914 nodi e 65001 archi, e mostra una configurazione sparsa. Pertanto, si è deciso di estrarre la componente connessa più estesa fra quelle contenute originariamente, e filtrare, all'interno del sottoinsieme ottenuto, i nodi con un grado superiore al primo, poiché fonte di informazioni di bassa rilevanza. Le successive analisi nella trattazione si riferiscono pertanto a tale sottografo. La rappresentazione ottenuta è visibile in Figura \ref{fig:grafo}.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\linewidth]{Grafo.png}
+    \label{fig:grafo}
+    \caption{Le connessioni sono colorate diversamente a seconda del tipo: in rosso se risposte, in azzurro se citazioni, in arancione se menzioni, in giallo se \textit{retweet}. I nodi rossi e di forma quadrata indicano la presenza di bot all'interno del grafo.}
+\end{figure}
+\subsection{Descrizione del sottografo principale}
+Il sottografo oggetto d'analisi consta di 16061 nodi e 50627 archi. Il grado dei vertici si distribuisce in un range compreso fra 2 e 1975, con una media di 6.3 legami per ciascun utente e una moda di 2. Per quanto riguarda le metriche di connessione, la rete è caratterizzata da un coefficiente di clustering medio - inteso come media dei coefficienti di clustering locale $\frac{1}{N}\sum_{i=1}^N\frac{2||N(v)||}{e(e-1)}$ con $n$ numero di nodi e $N(v)$ vicinato del vertice v - è moderato, pari a ~0.284. Ciò significa che, in media, le connessioni effettivamente realizzate all'interno del vicinato di ciascun utente costituiscono circa il 28.4\% di quelle potenzialmente realizzabili. Il livello è nettamente minore per quanto riguarda il coefficiente di clustering globale - o transitività -, che misura la tendenza a raggrupparsi dei membri come rapporto fra il numero di triple chiuse e il totale delle triple presenti. In questo caso, infatti, si ottiene un valore pari a ~0.0047. Anche la densità, calcolata con la formula $\frac{2e}{n(n-1)}$ con $e,n$ rispettivamente dimensione e ordine del grafo, è molto bassa, pari a ~0.0004. Un tale valore, sotto la soglia dell'1\%, dimostra che, nonostante sia una componente connessa estratta dall'enorme struttura originale, il sottografo studiato rimanga comunque molto sparso. È molto probabile che la scarsa chiusura della rete possa dipendere dall'aver estratto i \textit{tweets} in una sola giornata: per avere una visione più completa della connessione si sarebbe dovuta estendere la raccolta in un arco di tempo maggiore, ma ciò avrebbe causato eccessive difficoltà nella memorizzazione, modifica e analisi del database risultante.\\
+Ci si è poi focalizzati sulle metriche di distribuzione. Innanzitutto, sono stati individuati i nodi caratterizzati da un'elevata \textit{degree centrality} - numerosità degli archi incidenti. La Tabella 1 mostra i risultati relativi ai 10 utenti più centrali all'interno della discussione.
+\par{\begin{table}[ht]
+\centering
+\begin{tabular}[t]{lcc}
+\toprule
+&Centralità&Bot\\
+\midrule
+\textbf{honest2gosh}&0.12&No\\
+\textbf{cjtruth}&0.11&No\\
+\textbf{realDonaldTrump}&0.098&No\\
+\textbf{Inevitable\_ET}&0.094&No\\
+\textbf{JuliansRum}&0.084&No\\
+\textbf{M2Madness}&0.069&No\\
+\textbf{Yoder\_Esqq}&0.059&No\\
+\textbf{ThanQTrump}&0.057&No\\
+\textbf{stormypatriot21}&0.048&No\\
+\textbf{SheepKnowMore}&0.045&No\\
+\bottomrule
+\end{tabular}
+\end{table}\par}
+Nessuno di questi utenti centrali è stato classificato come bot. La centralità media degli account automatizzati - pari a 0.0003 - è leggermente minore rispetto a quella degli utenti umani - 0.0004. Nonostante ciò, come visibile dalla Figura \ref{fig:centr}, questa differenza non è significativa.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\linewidth]{centr.png}
+    \label{fig:centr}
+    \caption{Distribuzioni logaritmiche della centralità degli utenti artificiali e umani a confronto.}
+\end{figure}
+Infine, per quanto riguarda le metriche di distribuzione, l'istogramma (Figura \ref{fig:grado}) che rappresenta la distribuzione del grado mostra una chiara relazione di tipo esponenziale negativo fra il numero di archi incidenti - in ascissa - e il numero di vertici con tale grado. Perciò, è possibile concludere che gli utenti preferiscano instaurare nuovi collegamenti - ovvero menzionare, citare o \textit{"retwettare"} - con le personalità più popolari  all'interno della macro-comunità - detti \textit{hub} -, anziché interagire con vertici meno collegati. Tale meccanismo, tipico delle reti complesse e molto resistente, comporta la preservazione della proprietà dell’invarianza di scala.Inoltre, la presenza di \textit{hub} è alla base dell’effetto small-world: essi sono in grado di connettere zone del grafo altrimenti separate.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\linewidth]{grado.png}
+    \label{fig:centr}
+    \caption{Relazione fra il numero di archi incidenti - in ascissa - e la frequenza con cui questo valore del grado viene osservato - in ordinata.}
+\end{figure}
+Per approfondire le caratteristiche della rete, è necessario indagare i pattern di connessione, intesi come manifestazioni di una proprietà generale delle interazioni reali: la correlazione di grado $p_{kk'}$. $p_{kk'}$ misura la tendenza all'interazione fra i vertici rispettivamente di grado $k$ e $k'$. Se gli utenti più popolari, i cosiddetti \textit{hub}, tendono a relazionarsi fra di loro, allora la rete può essere definita assortativa, altrimenti, se essi si evitano sistematicamnte, viene detta disassortativa. Il coefficiente di assortatività del grafo in esame, calcolato come correlazione di Pearson fra i valori del grado, è pari a circa - 0.233. Poiché negativo, è possibile concludere che la rete sia disassortativa. La ragione è facilmente deducibile. Infatti, il meccanismo di promozione dei contenuti nei \textit{social networks} si basa principalmente sul livello di popolarità degli autori stessi. Inoltre, è evidente come un messaggio pubblicato da una figura di spicco possa essere ritenuto più interessante rispetto al post di un utente poco noto. Queste dinamiche inducono i vertici della rete a raggrupparsi attorno agli \textit{hub}, e a livello aggregato il comportamento si manifesta con una correlazione di grado negativa, oltre che con la distribuzione di grado \textit{long-tailed} già vista.\\
+Dopo aver esaminato le peculiarità delle interazioni, è utile studiare le sotto-architetture del grafo. È stato, dunque, individuato un numero elevato di cricche massimali, 38435, fra cui la maggiore è composta da 9 vertici. La struttura degli archi include 654 ponti, concentrati verso la zona centrale. Infine, è stata estrapolato il sotto-grafo composto dai bot, visibile nella Figura \ref{fig:bots}. 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\linewidth]{bots.png}
+    \label{fig:bots}
+    \caption{Sottografo degli account automatizzati (in rosso).}
+\end{figure}
+Tale sotto-insieme consta di 248 vertici e 9 archi, concentrati prevalentemente nella zona centrale, a confermare nuovamente la forta influenza esercitata. Il grado si distribuisce in un range compreso fra 0 e 3, con una media pari a 0.1 e moda nulla. I collegamenti osservati sono rarissimi, e l'assenza di coesione è verificata dal fatto che coefficiente di clustering medio e transitività abbiano valore nullo.\\
+L'importanza dei profili automatici nelle dinamiche viene però ridimensionata, in ultima analisi, verificando la loro presenza all'interno dei "set dominanti" del grafo. I \textit{dominating set} possono essere considerati come le architetture reggenti della rete. In particolare, ne sono stati esaminati due tipi:
+\begin{itemize}
+    \item \textit{Node-dominating}, che corrisponde al sottoinsieme dei vertici $D$ tale per cui ogni nodo esterno a $D$ è adiacente ad almeno un suo membro
+    \item \textit{Edge-dominating}, che è il subset di archi $F$ tale per cui ogni legame in esso non compreso è incidente all'estremo di almeno un arco incluso in $F$.
+\end{itemize}
+Nel primo caso, nonostante la minor numerosità, soltanto 34 bot su 387 individuati sono contenuti all'interno dell'insieme dominante, mentre la percentuale di profili reali inclusi sul totale è quasi doppia. Per quanto riguarda l'\textit{edge-dominating set}, la percentuale di bot è addirittura nulla.
 %------------------------------------------------
 \section{Community Detection}
+Il \textit{task} successivo consiste nell'assegnare gli utenti a diverse comunità, in base alle interazioni virtuali osservate. In particolare, nell'ambito dei \textit{social network} esse rappresentano \textit{cluster} di utenti che mostrano caratteristiche simili - come argomenti di interesse, ideologie politiche, o l'essere d'accordo o meno con la teoria cospirativa.\\
+Sono state testate 4 metodologie diverse per effettuare la \textit{community detection}, presentate nella sezione successiva.
 \subsection{Metodologie di estrazione}
 \subsubsection{Algoritmo di Louvain}
 \subsubsection{Metodo di Newman}
@@ -157,7 +217,7 @@ Per quanto riguarda la "\textit{Sentiment Analysis}", queste due operazioni non 
 %------------------------------------------------
 \newpage
 \section*{Codice}
-L'intero codice, implementato con linguaggi \verb|Python| e \verb|R|, è disponibile al link: \url{https://github.com/RCrvro/Social-Media-Analytics-Project}.
+L'intero codice, implementato con linguaggi \texttt{Python} e \texttt{R}, è disponibile al link: \url{https://github.com/RCrvro/Social-Media-Analytics-Project}.
 
 \section*{Bibliografia}
  
