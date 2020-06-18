@@ -64,7 +64,7 @@
 %	ABSTRACT
 %----------------------------------------------------------------------------------------
 
-\Abstract{}
+\Abstract{Il progetto si propone di analizzare le dinamiche interne al dibattito legato al crescente fenomeno della cospirazione denominata \textit{QAnon}. Pertanto, definito il grafo delle interazioni virtuali estratte dal \textit{social network Twitter}, lo studio si focalizzerà sulla descrizione dell'architettura composta dagli utenti, sulla rilevazione delle comunità da essi formate, individuazione dei \textit{topic ricorrenti} nella narrazione e analisi del sentimento dei testi pubblicati dai membri di ciascun gruppo.}
 
 %----------------------------------------------------------------------------------------
 
@@ -135,10 +135,10 @@ Innanzitutto, si è scelto di sfruttare la versione estesa dei \textit{tweet}, o
 In aggiunta, per una migliore estrazione dei \textit{topic} e una stima efficace del \textit{language model} il testo è stato sottoposto a ulteriori processi: rimozione delle \textit{stopwords}\footnote{I termini rimossi sono quelli presenti all'interno del dizionario \textit{stopwords} nel corpus del pacchetto \href{https://www.nltk.org/_modules/nltk/corpus.html}{\texttt{nltk}} in \texttt{Python}} - e lemmatizzazione. Quest'ultima è stata combinata con un procedimento di \textit{POS Tagging}, poiché il risultato di estrazione dei lemmi migliora sensibilmente se vi si antepone il riconoscimento delle componenti grammaticali, diminuendo le ambiguita del testo. La \textit{pipeline} appena descritta è stata implementata mediante  la libreria per l'elaborazione del linguaggio naturale \texttt{spaCy}\footnote{Documentazione ufficiale della libreria: \url{https://spacy.io/usage/models}}.\\
 Per quanto riguarda la "\textit{Sentiment Analysis}", queste due operazioni non sono state effettuate, al fine di evitare una perdita di informazione che potesse penalizzarne il risultato e l'efficienza.
 \subsection{Individuazione dei bot}
-L'impiego di programmi automatici per la distribuzione di messaggi malevoli di propaganda è prassi diffusa fra i movimenti cospirazionisti sul \textit{Web}, perché ciò permette di raggiungere in maniera più semplice e rapida un maggior bacino d'utenza, specialmente all'interno delle piattaforme dei \textit{social networks}. Nonostante il continuo sviluppo di questi sistemi abbia reso complicata la loro individuazione, sono state rilasciate alcune librerie che, sfruttando un modello generato da algoritmi di apprendimento, analizzano le \textit{feature} dell'account - testuali e non -  e restituiscono la probabilità di essere un bot. In questo caso, si è optato per pacchetto \texttt{tweetbotornot}\footnote{Codice e documentazione della libreria: \url{https://github.com/mkearney/tweetbotornot}. È stato usato il \textit{default model}, per il quale viene indicata un'accuratezza del 93.53\% nel riconoscimento di bot e del 95.32\% nell'individuazione di utenti reali.} nel linguaggio \texttt{R}. Impostando 90\% come soglia di probabilità, il sistema ha estratto 387 account automatizzati, per un totale di 840 \textit{tweets}. Si è scelto di non rimuoverli dal database, in modo da valutare l'incidenza di questi utenti artificiali sul dibattito e la loro presenza in determinate comunità. A tal proposito, è interessante notare come molti di essi abbiano un numero di \textit{follower} elevato\footnote{La media del numero di follower per bot è pari a ~4199, additittura con un massimo di 104717.}, facendo supporre un elevato grado di potenziale influenza sulla reale utenza. Casi ancor più particolari si verificano quando alla numerosità dei seguaci si abbina una probabilità di essere bot superiore al 99\%: è il caso, ad esempio, dell'account nominato "Donna Holmes", che mostra un valore di probabilità del 99.98\% - il maggiore osservato - e conta più di 9000 \textit{followers}. 
+L'impiego di programmi automatici per la distribuzione di messaggi malevoli di propaganda è prassi diffusa fra i movimenti cospirazionisti sul \textit{Web}, perché ciò permette di raggiungere in maniera più semplice e rapida un maggior bacino d'utenza, specialmente all'interno delle piattaforme dei \textit{social networks}. Nonostante il continuo sviluppo di questi sistemi abbia reso complicata la loro individuazione, sono state rilasciate alcune librerie che, sfruttando un modello generato da algoritmi di apprendimento, analizzano le \textit{feature} dell'account - testuali e non -  e restituiscono la probabilità di essere un bot. In questo caso, si è optato per pacchetto \texttt{tweetbotornot}\footnote{Codice e documentazione della libreria: \url{https://github.com/mkearney/tweetbotornot}. È stato usato il \textit{default model}, per il quale viene indicata un'accuratezza del 93.53\% nel riconoscimento di bot e del 95.32\% nell'individuazione di utenti reali.} nel linguaggio \texttt{R}. Impostando 90\% come soglia di probabilità, il sistema ha estratto 387 account automatizzati, per un totale di 840 \textit{tweets}. Si è scelto di non rimuoverli dal database, in modo da valutare l'incidenza di questi utenti artificiali sul dibattito e la loro presenza in determinate comunità. A tal proposito, è interessante notare come molti di essi abbiano un numero di \textit{follower} elevato\footnote{La media del numero di follower per bot è pari a $\sim$ 4199, additittura con un massimo di 104717.}, facendo supporre un elevato grado di potenziale influenza sulla reale utenza. Casi ancor più particolari si verificano quando alla numerosità dei seguaci si abbina una probabilità di essere bot superiore al 99\%: è il caso, ad esempio, dell'account nominato "Donna Holmes", che mostra un valore di probabilità del 99.98\% - il maggiore osservato - e conta più di 9000 \textit{followers}. 
 %------------------------------------------------
 \section{Grafo delle interazioni}
-Dopo aver analizzato in forma preliminare il database dei metadati dei \textit{tweets} registrati, si è proceduto ad analizzare il complesso di interazioni virtuali fra gli utenti impegnati nella discussione \textit{online} sul fenomeno \textit{QAnon}. Grazie alla libreria \texttt{NetworkX}\footnote{Documentazione ufficiale della libreria: \url{https://networkx.github.io/documentation/stable/}}, è stato possibile definire una struttura a grafo, all'interno della quale i nodi e gli archi rappresentano rispettivamente gli utenti e l'insieme di legami intercorsi sotto forma di \textit{retweet}, citazioni, menzioni e risposte. Il complesso generato dalle 49732 righe si prensenta come un grafo non orientato composto da 30914 nodi e 65001 archi, e mostra una configurazione sparsa. Pertanto, si è deciso di estrarre la componente connessa più estesa fra quelle contenute originariamente, e filtrare, all'interno del sottoinsieme ottenuto, i nodi con un grado superiore al primo, poiché fonte di informazioni di bassa rilevanza. Le successive analisi nella trattazione si riferiscono pertanto a tale sottografo. La rappresentazione ottenuta è visibile in Figura \ref{fig:grafo}.
+Dopo aver analizzato in forma preliminare il database dei metadati dei \textit{tweets} registrati, si è proceduto ad analizzare il complesso di interazioni virtuali fra gli utenti impegnati nella discussione \textit{online} sul fenomeno \textit{QAnon}. Grazie alla libreria \texttt{NetworkX}\footnote{Documentazione ufficiale della libreria: \url{https://networkx.github.io/documentation/stable/}}, è stato possibile definire una struttura a grafo, all'interno della quale i nodi e gli archi rappresentano rispettivamente gli utenti e l'insieme di legami intercorsi sotto forma di \textit{retweet}, citazioni, menzioni e risposte. Il complesso generato dalle 49732 righe si prensenta come un grafo non orientato composto da 30914 nodi e 65001 archi, e mostra una configurazione sparsa. Pertanto, si è deciso di estrarre la componente connessa più estesa fra quelle contenute originariamente, e filtrare, all'interno del sottoinsieme ottenuto, i nodi con un grado superiore al primo, poiché fonte di informazioni di bassa rilevanza. Le successive analisi nella trattazione si riferiscono pertanto a tale sottografo. La rappresentazione ottenuta è visibile in Figura 2.
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.9\linewidth]{Grafo.png}
@@ -146,7 +146,7 @@ Dopo aver analizzato in forma preliminare il database dei metadati dei \textit{t
     \caption{Le connessioni sono colorate diversamente a seconda del tipo: in rosso se risposte, in azzurro se citazioni, in arancione se menzioni, in giallo se \textit{retweet}. I nodi rossi e di forma quadrata indicano la presenza di bot all'interno del grafo.}
 \end{figure}
 \subsection{Descrizione del sottografo principale}
-Il sottografo oggetto d'analisi consta di 16061 nodi e 50627 archi. Il grado dei vertici si distribuisce in un range compreso fra 2 e 1975, con una media di 6.3 legami per ciascun utente e una moda di 2. Per quanto riguarda le metriche di connessione, la rete è caratterizzata da un coefficiente di clustering medio - inteso come media dei coefficienti di clustering locale $\frac{1}{N}\sum_{i=1}^N\frac{2||N(v)||}{e(e-1)}$ con $n$ numero di nodi e $N(v)$ vicinato del vertice v - è moderato, pari a ~0.284. Ciò significa che, in media, le connessioni effettivamente realizzate all'interno del vicinato di ciascun utente costituiscono circa il 28.4\% di quelle potenzialmente realizzabili. Il livello è nettamente minore per quanto riguarda il coefficiente di clustering globale - o transitività -, che misura la tendenza a raggrupparsi dei membri come rapporto fra il numero di triple chiuse e il totale delle triple presenti. In questo caso, infatti, si ottiene un valore pari a ~0.0047. Anche la densità, calcolata con la formula $\frac{2e}{n(n-1)}$ con $e,n$ rispettivamente dimensione e ordine del grafo, è molto bassa, pari a ~0.0004. Un tale valore, sotto la soglia dell'1\%, dimostra che, nonostante sia una componente connessa estratta dall'enorme struttura originale, il sottografo studiato rimanga comunque molto sparso. È molto probabile che la scarsa chiusura della rete possa dipendere dall'aver estratto i \textit{tweets} in una sola giornata: per avere una visione più completa della connessione si sarebbe dovuta estendere la raccolta in un arco di tempo maggiore, ma ciò avrebbe causato eccessive difficoltà nella memorizzazione, modifica e analisi del database risultante.\\
+Il sottografo oggetto d'analisi consta di 16061 nodi e 50627 archi. Il grado dei vertici si distribuisce in un range compreso fra 2 e 1975, con una media di 6.3 legami per ciascun utente e una moda di 2. Per quanto riguarda le metriche di connessione, la rete è caratterizzata da un coefficiente di clustering medio - inteso come media dei coefficienti di clustering locale $\frac{1}{N}\sum_{i=1}^N\frac{2||N(v)||}{e(e-1)}$ con $n$ numero di nodi e $N(v)$ vicinato del vertice v - è moderato, pari a $\sim$ 0.284. Ciò significa che, in media, le connessioni effettivamente realizzate all'interno del vicinato di ciascun utente costituiscono circa il 28.4\% di quelle potenzialmente realizzabili. Il livello è nettamente minore per quanto riguarda il coefficiente di clustering globale - o transitività -, che misura la tendenza a raggrupparsi dei membri come rapporto fra il numero di triple chiuse e il totale delle triple presenti. In questo caso, infatti, si ottiene un valore pari a $\sim$ 0.0047. Anche la densità, calcolata con la formula $\frac{2e}{n(n-1)}$ con $e,n$ rispettivamente dimensione e ordine del grafo, è molto bassa, pari a $\sim$ 0.0004. Un tale valore, sotto la soglia dell'1\%, dimostra che, nonostante sia una componente connessa estratta dall'enorme struttura originale, il sottografo studiato rimanga comunque molto sparso. È molto probabile che la scarsa chiusura della rete possa dipendere dall'aver estratto i \textit{tweets} in una sola giornata: per avere una visione più completa della connessione si sarebbe dovuta estendere la raccolta in un arco di tempo maggiore, ma ciò avrebbe causato eccessive difficoltà nella memorizzazione, modifica e analisi del database risultante.\\
 Ci si è poi focalizzati sulle metriche di distribuzione. Innanzitutto, sono stati individuati i nodi caratterizzati da un'elevata \textit{degree centrality} - numerosità degli archi incidenti. La Tabella 1 mostra i risultati relativi ai 10 utenti più centrali all'interno della discussione.
 \par{\begin{table}[ht]
 \centering
@@ -167,7 +167,7 @@ Ci si è poi focalizzati sulle metriche di distribuzione. Innanzitutto, sono sta
 \bottomrule
 \end{tabular}
 \end{table}\par}
-Nessuno di questi utenti centrali è stato classificato come bot. La centralità media degli account automatizzati - pari a 0.0003 - è leggermente minore rispetto a quella degli utenti umani - 0.0004. Nonostante ciò, come visibile dalla Figura \ref{fig:centr}, questa differenza non è significativa.
+Nessuno di questi utenti centrali è stato classificato come bot. La centralità media degli account automatizzati - pari a 0.0003 - è leggermente minore rispetto a quella degli utenti umani - 0.0004. Nonostante ciò, come visibile dalla Figura \ref{fig:centr}, questa differenza non è statisticamente significativa\footnote{Il livello di confidenza scelto è del 95\%.}.
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\linewidth]{centr.png}
@@ -202,29 +202,191 @@ Il \textit{task} successivo consiste nell'assegnare gli utenti a diverse comunit
 Sono state testate 4 metodologie diverse per effettuare la \textit{community detection}, presentate nella sezione successiva.
 \subsection{Metodologie di estrazione}
 \subsubsection{Algoritmo di Louvain}
+Il metodo sfrutta le euristiche di Louvain\cite{Louvain} per la rilevazione di comunità all'interno di grafi molto estesi. Più precisamente, si configura come un algoritmo \textit{greedy} di ottimizzazione che mira a massimizzare la modularità in tempo $O(log^2n$, con $n$ numero dei vertici. La modularità è un valore scalare compreso fra -0.5 - nel caso di \textit{clustering} non modulare - e 1 - \textit{clustering} perfettamente modulare -, che misura la densità relativa dei legami all'interno delle comunità rispetto a quella degli archi all'esterno. Pertanto, il risultato delle iterazioni corrisponderà alla partizione che genera comunità internamente più dense. Nel dettaglio, le prime comunità di dimensione ridotta vengono trovate ottimizzando localmente la modularità su tutti i nodi, dopodiché ciascuna di esse viene raggruppata in nuovi \textit{clusters}, ripetendo i due passaggi fino al risultato.\\
+La partizione ottenuta dall'utilizzo dell'algoritmo di Louvain nel caso presentato possiede un buon valore di modularità: $\sim$ 0.58. Le comunità estratte sono 42, visibili in Figura 6.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{LouvainPartition.png}
+    \label{fig:l}
+    \caption{Partizione del grafo in 42 comunità ottenuta con l'algoritmo di Louvain.}
+\end{figure}
+La distribuzione dei nodi per comunità, quindi l'andamento dell'ordine per ciascun \textit{cluster}, mostra un forte sbilanciamento, come osservato in Figura 7.
+\par
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{OrderLouvain.png}
+    \label{fig:orderl}
+    \caption{Istogramma della distribuzione dell'ordine nelle 42 comunità rilevate dall'algoritmo di Louvain.}
+\end{figure}
+\par
 \subsubsection{Metodo di Newman}
+Il metodo di Newman\cite{Newman} viene eseguito mediante un algoritmo ricorsivo di\textit{clustering} divisivo basato sugli autovettori principali della matrice di modularità, la quale svolge una funzione molto simile a quella della matrice Laplaciana nella rilevazione delle comunità. Dunque, in questo caso, il problema di massimizzazione della modularità viene risolto in termini di autospettro della matrice di modularità.\\
+Il metodo di Newman individua 36 comunità. In questo caso, la distribuzione dell'ordine nei vari \textit{cluster} appare ancor più sbilanciata verso il primo e il sedicesimo, come visibile in Figura 8.
+\par
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{OrderNewman.png}
+    \label{fig:orderl}
+    \caption{Istogramma della distribuzione dell'ordine nelle 36 comunità rilevate dall'algoritmo di Newman.}
+\end{figure}
+\par
 \subsubsection{Propagazione asincrona dell'etichetta}
+L'algoritmo \textit{Asynchronous label propagation}\cite{ALP} è un metodo probabilistico basato sui seguenti step:
+\begin{enumerate}
+    \item inizializzazione di ciascun vertice con un'etichetta unica
+    \item assegnazione a ciascun nodo dell'etichetta più frequente nel proprio vicinato
+    \item iterazione del punto 2, finché la condizione ricercata viene verificata in tutti i vertici.
+\end{enumerate}
+Il concetto di asincronia si compie nel funzionamento stesso dell'algoritmo: l'etichetta di ogni nodo viene aggiornata senza attendere l'aggiornamento delle restanti. Tuttavia, essendo una metodologia probabilistica, la propagazione asincrona dell'etichetta non garantisce la coerenza del risultato ad ogni esecuzione.\\
+Il metodo rileva 1551 comunità ridotte. In Figura 9 è visibile la distribuzione dei nodi nei 33 maggiori \textit{clusters}, filtrati sulla base dell'ordine medio. Nonostante le piccole dimensioni, essa appare ancora sbilanciata.
+\par
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{OrderALP.png}
+    \label{fig:orderl}
+    \caption{Istogramma della distribuzione dell'ordine nelle 33 maggiori comunità rilevate dall'algoritmo di propagazione asincrona dell'etichetta.}
+\end{figure}
+\par
 \subsubsection{Metodo Information Map}
-\subsection{Analisi delle comunità}
+La quarta metodologia estrae le sottostrutture principali del grafo seguendo algoritmo di mappatura dell'informazione elaborato da Rosvall e Bergstrom\cite{IM1}\cite{IM2}.\\
+Il metodo individua 853 comunità, che risultano essere meno sbilanciate rispetto alle partizioni viste in precedenza (Figura 10).
+\par
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{OrderIM.png}
+    \label{fig:orderl}
+    \caption{Istogramma della distribuzione dell'ordine nelle 34 maggiori comunità rilevate dal metodo di mappatura dell'informazione di Rosvall e Bergstrom.}
+\end{figure}
+\par
+\\
+La selezione del miglior risultato può svolgersi sulla base di un indice il cui calcolo si rivela essere a basso costo computazionale: il cosiddetto \textit{ratio} di copertura, pari al rapporto fra il numero di legami interni a ciascuna comunità e il totale di archi nel grafo. Si configura, pertanto, come metrica molto simile alla modularità. La Tabella 2 riassume i valori di \textit{coverage ratio} e il numero di comunità estratte da ciascun algoritmo.
+\par{\begin{table}[ht]
+\centering
+\begin{tabular}[t]{lcc}
+\toprule
+&Comunità&Copertura\\
+\midrule
+\textbf{Louvain's}&42&0.66\\
+\textbf{Newman's}&36&0.54\\
+\textbf{InformationMap}&853&0.52\\
+\textbf{ALP}&1551&0.48\\
+\bottomrule
+\end{tabular}
+\end{table}\par}
+Si è optato per la partizione offerta dalla metodologia basata sulle euristiche di Louvain, poiché fornisce un valore di copertura nettamente più alto.\\
+Nella data partizione, l'ordine medio delle comunità è $\sim$ 382. Si è deciso di focalizzare le successive analisi sui 12 principali \textit{clusters}, che corrispondono ai gruppi con numero di utenti superiore all'ordine medio. I membri - vertici - compresi nelle comunità rilevanti sono 11441 (71,24\%), per un totale di 25966 \textit{tweets} pubblicati.\\
+Nella sezione "Risultati" viene riportata una descrizione di ciascuna comunità rilevante, per quanto riguarda la struttura, i \textit{topic}, i sentimenti e le polarità dei testi. 
 %------------------------------------------------
 \section{Temi e linguaggio}
+Dopo aver eseguito le fasi addizionali di pre-processing già menzionate - \textit{POS Tagging}, lemmatizzazione e rimozione delle stopwords -, aver rimosso i \textit{tweets} duplicati per ogni comunità e averli raggrupati, si è proceduto a calcolare gli indici \textit{tf.idf} per ciascun termine all'interno della collezione, considerando come un unico documento i set di testi per comunità. In questo modo, la formulazione \textit{tf.idf} ha permesso di rilevare i termini non soltanto più frequenti fra i membri di ciascun \textit{cluster}, ma anche più rilevanti nella discussione interna alla data comunità. Tuttavia, la mera lettura della matrice sparsa dei pesi per ciascuna parola - avvenuta direttamente o mediante produzione di grafici \textit{Word Cloud} - non è stata sufficiente ad individuare i \textit{topic} e il linguaggio tipici di ciascun gruppo di utenti. Per questo motivo, è stato necessario approfondire l'analisi dei pattern semantici all'interno dei testi, stimando un modello del linguaggio con il rapido e popolare metodo statistico generativo denominato. \textit{Latent Dirichlet Allocation}\cite{LDA}. È stato così possibile estrarre i dieci termini peculiari per ciascuna comunità, ovvero quelli con maggior probabilità di attribuzione ad un membro compreso nella stessa. 
 %------------------------------------------------
 \section{Sentiment Analysis}
+Il fenomeno \textit{QAnon}, poiché nato da un movimento parapolitico di estrema destra, ultra-conservatore e talvolta misogino e razzista, è in grado di generare una discussione ricca di strati emotivi. Nei casi più negativi, esso fomenta la diffusione di messaggi violenti, attirando critiche rabbiose. Spesso, la teoria cospirativa, in quanto tale, viene derisa come una semplice fantasia. Lo studio della polarità e delle emozioni sottostanti ai testi è pertanto necessaria, oltre che utile, per evitare di interpretare troppo superficialmente le dinamiche aggregate riguardanti gli utenti impegnati o coinvolti nel dibattito.\\
+La \textit{Sentiment Analysis} ha implicato l'esecuzione di un metodo \textit{lexicon-based} di attribuzione binaria di un emozione  ad ogni parola - fra le 8 previste - e calcolo della polarità totale del testo - positiva, negativa o neutra -, sfruttando la risorsa \textit{NRC} nell'ambiente di programmazione \texttt{R}. Nel dettaglio, le categorie previste dal lessico sono: rabbia (\textit{anger}), aspettativa (\textit{anticipation}), disgusto (\textit{disgust}), paura (\textit{fear}), gioia (\textit{joy}), tristezza (\textit{sadness}), sorpresa (\textit{surprise}), fiducia (\textit{trust}), e in aggiunta le due polarità positiva e negativa.\\
+I risultati mostrano la fiducia come emozione più frequente (Figura 11), seguita da paura e aspettativa, mentre la meno presente appare il disgusto. Rabbia e gioia tendono a equivalere.
+\par
+\begin{figure}[ht]
+    \centering
+    \includegraphics[height=6cm,width=1.2 \linewidth]{EmotionBarChart.png}
+    \label{fig:em}
+    \caption{Istogramma della frequenza totale delle emozioni nel corpus composto da tutti i \textit{tweets} raccolti.}
+\end{figure}
+\par
+La prevalenza del sentimento di fiducia può essere giustificato innanzitutto dalla ricorrenza del concetto di "attesa della tempesta" prima citato, equivalente alla speranza, da parte dei promotori della falsa teoria, che le trame ordite dal presunto stato profondo vengano presto svelate e i suoi membri arrestati. Al tempo stesso, assieme alla forte presenza del sentimento di aspettativa, è anche probabile che l'emozione \textit{trust} riassuma l'ottimismo dei sostenitori nei confronti di un'ipotetica rielezione dell'attuale presidente degli Stati Uniti Donald Trump, il novembre di questo anno. Il dibattito è anche comprensibilmente pervaso dalla paura, sia per quanto riguarda gli utenti che temono la crescente popolarità e pericolosità di \textit{QAnon}, sia in riferimento a quanti considerano credibili le illazioni sul traffico internazionale di minori e corruzione. Le altre emozioni estratte dai \textit{tweets} si configurano come sfumature più o meno aggressive o intense di quelle già nominate. In generale, tuttavia, ciò che appare dal grafico è un certo equilibrio fra gli spettri emotivi contrapposti della discussione: come visibile dalla Figura 12, la polarità positiva è superiore a quella negativa, ma, dato che i dati sono stati raccolti in un arco di tempo ridotto, questa differenza non può essere ritenuta significativa.
+\par
+\begin{figure}[ht]
+    \centering
+    \includegraphics[height=6cm,width=0.9 \linewidth]{PolarityBarChart.png}
+    \label{fig:em}
+    \caption{Istogramma della frequenza totale dei testi assegnati rispettivamente alle due polarità emotive contrapposte.}
+\end{figure}
+\par
 %------------------------------------------------
-\section{Risultati}
+\section{Risultati per comunità}
+I risultati delle analisi eseguite separatamente su ognuna delle 12 comunità rilevanti, ovvero i \textit{clusters} contententi un numero di utenti superiore all'ordine medio, mostrano la presenza di due grandi componenti: le comunità 0, 2 e 3. Come si vedrà, esse costituiscono i tre poli di attrazione maggiore all'interno del dibattito. Attorno a questi sottografi estesi, a comporre l'architettura generale, si spargono nove comunità satellite.
+\subsection{Comunità 0}
+La comunità 0 è la più popolosa: composta da 2862 nodi, connessi da 7085 archi, ha una distribuzione di grado compresa fra 1 e 932, per un numero medio di archi incidenti per vertice pari a 5. Oltre a essere la comunità più estesa, è anche quella con coefficiente di clustering medio maggiore ($\sim$ 0.40). Nonostante ciò, a livello globale, la coesione è tra le minori: la transitività è pari a 0.005, e la densità si assesta su un livello molto basso, arrivando perfino a toccare il minimo registrato: 0.0017. I 2.17\% degli utenti raggruppati in questo \textit{cluster} è stato classificato come automatizzato. Il coefficiente di correlazione di grado è negativo - condizione che si verifica in tutti i 12 casi, indicando che tutte le sotto-reti sono disassortative - ed è il maggiore in valore assoluto: $\sim$ -0.57. Ciò rivela una forte tendenza al comportamento di interazione definito \textit{"the richer get richer"}: gli utenti poco noti si assembrano attorno alle personalità più popolari in modo maggiore rispetto a quanto visto nelle altre comunità rilevate. Quanto detto è visibile in Figura 13. 
+\par
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{C0.png}
+    \caption{Rappresentazione della comunità 0.}
+\end{figure}
+\par
+Infine, per quanto riguarda le metriche di distribuzione, viene fornita una misura dell'efficienza globale media della rete, calcolata come la media per tutti i vertici dell'inverso di tutte le distanze \textit{shortest path} all'interno del subset. Nel caso della comunità 0, l'efficienza è moderata: $\sim$ 0.37. Ciò significa che la struttura dei legami permette un flusso  moderatamente efficace  fra gli utenti.\\
+Le dodici espressioni chiave, estratte mediante \textit{Latent Dirichlet Allocation} sono le seguenti: \textit{patriot}, \textit{trump}, \textit{God}, \textit{M.A.G.A}, \textit{AntiFa}, \textit{police}, \textit{red}, \textit{united not divided}, \textit{stand}, \textit{Obamagate}, \textit{save America}. Come dedotto da queste \textit{keywords}, la comunità 0 comprende la maggioranza dei sostenitori della teoria \textit{QAnon}, poichè i testi si riferiscono alla figura politica Trump, considerato come presunto salvatore delle sorti statunitensi, e richiamano il concetto di patriottismo. Viene anche citato spessissimo Dio, poichè l'estremismo di destra si accompagna solitamente al conservatorismo religioso, e, in questo caso, perchè la divinità cristiana appare addirittura in ostaggio delle forza malvagie appartenenti allo stato profondo. Ritornano, poi, le accuse e gli attacchi nei confronti degli oppositori dell'amministrazione: Obama e il gruppo AntiFa. Il colore rosso, infine, viene considerato come simbolo del movimento.\\
+Il grafico in Figura 14 rappresenta le frequenze dello spettro emotivo.
+\par
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{EmotionsC0.png}
+    \caption{\textit{Radar chart} delle frequenze delle 8 emozioni all'interno dei testi della comunità 0.}
+\end{figure}
+\par
+La composizione rimane invariata rispetto a quanto visto a livello aggregato.
+\subsection{Comunità 2}
+La comunità 2, indicata come secondo grande polo di attrazione del dibattito, include 2036 account, connessi da 5474 legami. Il grado, distribuito fra 1 e 630, presenta la media massima registrata, pari a 5.4 archi incidenti per vertice. I valori di coesione sono moderati:
+\begin{itemize}
+    \item coefficiente di clustering medio: $\sim$ 0.28
+    \item transitività: $\sim$ 0.009
+    \item densità: 0.0026.
+\end{itemize}
+La percentuale di bot al suo interno è più che dimezzata rispetto alla comunità 0 ($\sim$ 1\%). Il coefficiente di assortatività è minore rispetto al \textit{cluster} analizzato in precedenza ($\sim$ -0.46). Nonostante la densità sia superiore a quella calcolata sulla comunità 0, l'efficienza è minore ($\sim$ 0.34).\\
+I topic estratti dal modello appaiono identici ai precedenti.\\
+Osservando lo spettro emotivo, non sembrano esserci differenze rilevanti nella composizione, come visibile nella Figura 15, a parte una crescita del livello di aspettativa. Ciò dipende, probabilmente, dal fatto che i testi, il più delle volte, vogliano esprimere ottimismo nei confronti di un secondo mandato dell'attuale \textit{POTUS}.
+\par
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{EmotionsC2.png}
+    \caption{\textit{Radar chart} delle frequenze delle 8 emozioni all'interno dei testi della comunità 2.}
+\end{figure}
+\par
+\subsection{Comunità 3}
+Il terzo gruppo principale consta di 1015 nodi e 2009 archi. La distribuzione del grado è compresa fra un minimo di 1 arco incidente a un massimo di 519, con una media pari a 4. Il clustering medio ($\sim$ 0.24) si attesta su un livello minore rispetto alle due comunità 0 e 2, ma a livello globale la coesione è nettamente maggiore: il valore della transitività (0.0147) è esattamente il triplo rispetto a quanto ottenuto dalla comunità 0 e più di una volta mezzo quella della comunità 2. Anche la densità è superiore: 0.0039. Tuttavia, nonostante il gruppo mostri un'elevata chiusura della rete, il flusso di informazione al suo interno, misurato dal valore di efficienza, è paragonabile agli altri due \textit{clusters}: 0.33. Infine, l'1.67\% dei profili sono automatizzati.\\
+La particolarità di questa sottoinsieme sta nel basso valore del coefficiente di correlazione di grado, che corrisponde al minimo registrato fra tutte le comunità: $\sim$ - 0.18, facendo supporre una minor sistematicità dei pattern d'interazione stessi. In altre parole, i legami non vengono così fortemente influenzati dalla popolarità dell'utente, così come osservato nelle altre comunità e, in particolare, nella prima analizzata. Questo comportamento è del tutto opposto a ciò che si potrebbe ipotizzare guardando la lista di utenti. Infatti, i profili centrali del \textit{cluster} appartengono proprio a Donald Trump (\textit{@realDonalTrump}) e alla Casa Bianca (\textit{@WhiteHouse}).\\ Nonostante i nodi principali corrispondano ad account ufficiali e, ovviamente, dall'enorme importanza dal punto di vista politico, il dibattito non ha assunto toni meno bizzarri: i temi estratti sono quelli tipici della narrazione \textit{QAnon}, tra cui il patriottismo, la necessità di ribaltare lo stato profondo segreto e ripartire con un nuovo ordine mondiale, la lotta cristiana nei confronti di questi ignoti malvagi.\\
+Inoltre, aumenta leggermente il livello di rabbia e discretamente la presenza di uno stato d'animo di paura. 
+\par
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{EmotionsC3.png}
+    \caption{\textit{Radar chart} delle frequenze delle 8 emozioni all'interno dei testi della comunità 3.}
+\end{figure}
+\par
+\subsection{Comunità satellite}
+Le nove comunità rimanenti si mantengono coerenti per quanto riguarda i \textit{topic} principali, ma ne affrontano sfaccettature particolari, riferendosi ad eventi come la morte di George Floyd e le successive proteste, il diffondersi della pandemia da Coronavirus, oppure commentando precisi fatti di cronaca che hanno coinvolto personaggi della politica e del giornalismo americano. In generale, queste comunità satellite non contano un numero di membri superiore alle 800 unità, e le caratteristiche delle varie strutture variano di molto da un caso all'altro. Osservando le metriche calcolate, è possibile notare una correlazione assoluta del 50\% fra i valori del coefficiente di assortatività e l'efficienza, a conferma di quanto spiegato in precedenza: la presenza sistematica di hub all'interno di una rete, favorita da un pattern d'interazione di tipo disassortativo, permette di collegare in maniera efficiente parti del sottografo altrimenti troppo lontane per potersi ricongiungere spontaneamente. In ogni caso, per una più utile analisi di correlazione, sarebbe necessario raccogliere dati su molte più comunità.
 %------------------------------------------------
-\section{Conclusioni}
+\section{Conclusioni e discussione}
+La rappresentazione delle dinamiche interne al dibattito su \textit{Twitter} relativo al crescente movimento dei cospirazionisti di estrema destra \textit{QAnon} ha permesso di estrapolare i temi ricorrenti della narrazione e riconoscere l'eccezionale trasversalità del fenomeno stesso: gli argomenti trattati, in un solo giorno, sono stati moltissimi e di vario genere.\\
+Aspetto interessante, tuttavia, rimane la sostanziale differenza fra le due macro-fazioni opposte impegnate nel dibattito: i sostenitori della teoria e gli oppositori. I primi hanno tendenze inclusive nei confronti degli utenti simili, agendo in gruppo nella diffusione della teoria, come testimonia la frequentissima espressione \textit{united not divided}. I secondi, invece, tendono ad intervenire da soli, all'interno del dibattito, spargendosi fra le varie comunità. Questa dinamica può essere giustificata dal fatto che il movimento, benché popolarissimo in determinati ambienti, sia ancora troppo poco noto all'opinione pubblica per indurre la formazione di vere e proprie comunità \textit{anti-QAnon}.\\
+Lavori futuri potrebbero sfruttare un bacino più ampio di documenti testuali, per indagare più approfonditamente gli eventuali \textit{sub-topics}. Inoltre, potrebbe essere necessario rendere più complesso il processo di \textit{community detection}, aggiungendo feature come l'ironia e il sarcasmo, in modo da separare correttamente gli utenti \textit{anti-QAnon} dal blocco dei promotori.
 %------------------------------------------------
 \newpage
+
 \section*{Codice}
 L'intero codice, implementato con linguaggi \texttt{Python} e \texttt{R}, è disponibile al link: \url{https://github.com/RCrvro/Social-Media-Analytics-Project}.
 
-\section*{Bibliografia}
+\newpage
+\phantomsection
+\begin{thebibliography}{9}
  
-\bibitem{B} 
-\href{http://statweb.stanford.edu/~imj/WEBLIST/2004/LarsAnnStat04.pdf}{Efron B., Hastie T., Johnstone I., Tibshirani R., \textit{Least Angle Regression}, Stanford University, Stanford, 2003.}
+\bibitem{Louvain} 
+\href{https://arxiv.org/abs/0803.0476}{V. D. Blondel, J. Guillaume, R. Lambiotte, E. Lefebvre, \textit{Fast unfolding of communities in large networks}, 2008.}
 
-\bibitem{D} 
-Hastie, T; Tibshirani, R.; Friedman J.; \textit{"The Elements of Statistical Learning: Data Mining, Inference, and Prediction"}, Stanford University, Stanford, 2009. 
+\bibitem{Newman} 
+\href{https://arxiv.org/abs/physics/0605087}{M. E. J. Newman, \textit{Finding community structure in networks using the eigenvectors of matrices}, 2006.}
+
+\bibitem{ALP} 
+\href{https://www.researchgate.net/publication/5915527_Near_Linear_Time_Algorithm_to_Detect_Community_Structures_in_Large-Scale_Networks}{N. Raghavan, R. Albert, S. Kumara, \textit{Near Linear Time Algorithm to Detect Community Structures in Large-Scale Networks}, 2007.}
+
+\bibitem{IM1} 
+\href{https://arxiv.org/abs/0707.0609}{M. Rosvall, C. T. Bergstrom, \textit{Maps of random walks on complex networks reveal community structure}, 2008.}
+
+\bibitem{IM2} 
+\href{https://arxiv.org/abs/0906.1405}{M. Rosvall, D. Axelsson, C. T. Bergstrom, \textit{The map equation}, 2009.}
+
+\bibitem{LDA} 
+\href{http://www.jmlr.org/papers/volume3/blei03a/blei03a.pdf}{D. M. Blei, A. Y. Ng, M. I. Jordan, \textit{Latent Dirichlet Allocation}, 2003.}
+
+\end{thebibliography}
 
 \end{document}
